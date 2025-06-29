@@ -10,6 +10,7 @@
 
 int main(int argc, char* argv[]) {
     bool refresh_mode = false;
+    int refresh_interval_ms = 1000; // Default to 1 second
 
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
@@ -28,6 +29,24 @@ int main(int argc, char* argv[]) {
             return 0;
         } else if (arg == "-r") {
             refresh_mode = true;
+        } else if (arg == "-i") {
+            if (i + 1 < argc) { // Make sure there is a next argument
+                try {
+                    refresh_interval_ms = std::stoi(argv[++i]);
+                    if (refresh_interval_ms < 100) { // Minimum interval to prevent excessive polling
+                        refresh_interval_ms = 100;
+                    }
+                } catch (const std::invalid_argument& e) {
+                    std::cerr << "Error: Invalid argument for -i. Must be an integer." << std::endl;
+                    return 1;
+                } catch (const std::out_of_range& e) {
+                    std::cerr << "Error: Refresh interval out of range." << std::endl;
+                    return 1;
+                }
+            } else {
+                std::cerr << "Error: -i requires an argument (refresh interval in ms)." << std::endl;
+                return 1;
+            }
         }
     }
 
@@ -46,7 +65,7 @@ int main(int argc, char* argv[]) {
             }
 
             // Non-blocking getch
-            timeout(1000); // 1 second timeout
+            timeout(refresh_interval_ms);
             int ch = getch();
 
             if (ch == 'q') {
