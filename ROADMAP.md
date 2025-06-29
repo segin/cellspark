@@ -26,6 +26,8 @@ This document outlines the plan for creating a C++ ncurses-based application to 
     *   **`Display` Class:**
         *   Create `Display.h` and `Display.cpp`.
         *   Implement an ncurses-based display to show the cellular information.
+    *   **Improve UI:**
+        *   Enhance the `Display` class to use colors and box-drawing characters for a more polished look.
     *   **`main` function:**
         *   Create `main.cpp`.
         *   Instantiate the `TermuxApi` and `Display` classes.

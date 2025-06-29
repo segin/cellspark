@@ -10,7 +10,12 @@ Display::Display() {
     noecho();
     curs_set(0);
     start_color();
-    init_pair(1, COLOR_GREEN, COLOR_BLACK);
+    if (has_colors()) {
+        init_pair(1, COLOR_CYAN, COLOR_BLACK); // Title
+        init_pair(2, COLOR_WHITE, COLOR_BLACK); // Labels
+        init_pair(3, COLOR_YELLOW, COLOR_BLACK); // Values
+        init_pair(4, COLOR_RED, COLOR_BLACK); // Error
+    }
 }
 
 Display::~Display() {
@@ -23,21 +28,49 @@ void Display::update(const std::string& data) {
     int rows, cols;
     getmaxyx(stdscr, rows, cols);
 
+    // Calculate box dimensions and position
+    int box_width = 40;
+    int box_height = 10;
+    int box_start_y = (rows - box_height) / 2;
+    int box_start_x = (cols - box_width) / 2;
+
+    // Draw box
     attron(COLOR_PAIR(1));
-    mvprintw(rows / 2 - 5, (cols - 20) / 2, "Cellular Information");
-    mvprintw(rows / 2 - 4, (cols - 20) / 2, "====================");
+    mvaddch(box_start_y, box_start_x, ACS_ULCORNER);
+    mvaddch(box_start_y, box_start_x + box_width, ACS_URCORNER);
+    mvaddch(box_start_y + box_height, box_start_x, ACS_LLCORNER);
+    mvaddch(box_start_y + box_height, box_start_x + box_width, ACS_LRCORNER);
+    mvhline(box_start_y, box_start_x + 1, ACS_HLINE, box_width - 1);
+    mvhline(box_start_y + box_height, box_start_x + 1, ACS_HLINE, box_width - 1);
+    mvvline(box_start_y + 1, box_start_x, ACS_VLINE, box_height - 1);
+    mvvline(box_start_y + 1, box_start_x + box_width, ACS_VLINE, box_height - 1);
+    attroff(COLOR_PAIR(1));
+
+    // Title
+    attron(COLOR_PAIR(1));
+    mvprintw(box_start_y + 1, box_start_x + (box_width - 20) / 2, "Cellular Information");
     attroff(COLOR_PAIR(1));
 
     try {
         json info = json::parse(data);
-        mvprintw(rows / 2 - 2, (cols - 30) / 2, "Operator: %s", info["network_operator_name"].get<std::string>().c_str());
-        mvprintw(rows / 2 - 1, (cols - 30) / 2, "Network Type: %s", info["network_type"].get<std::string>().c_str());
-        mvprintw(rows / 2, (cols - 30) / 2, "Data State: %s", info["data_state"].get<std::string>().c_str());
-        mvprintw(rows / 2 + 1, (cols - 30) / 2, "Data Activity: %s", info["data_activity"].get<std::string>().c_str());
-    } catch (json::parse_error& e) {
-        mvprintw(rows / 2, (cols - 30) / 2, "Error parsing JSON");
-    }
+        attron(COLOR_PAIR(2));
+        mvprintw(box_start_y + 3, box_start_x + 2, "Operator:");
+        mvprintw(box_start_y + 4, box_start_x + 2, "Network Type:");
+        mvprintw(box_start_y + 5, box_start_x + 2, "Data State:");
+        mvprintw(box_start_y + 6, box_start_x + 2, "Data Activity:");
+        attroff(COLOR_PAIR(2));
 
+        attron(COLOR_PAIR(3));
+        mvprintw(box_start_y + 3, box_start_x + 18, "%s", info["network_operator_name"].get<std::string>().c_str());
+        mvprintw(box_start_y + 4, box_start_x + 18, "%s", info["network_type"].get<std::string>().c_str());
+        mvprintw(box_start_y + 5, box_start_x + 18, "%s", info["data_state"].get<std::string>().c_str());
+        mvprintw(box_start_y + 6, box_start_x + 18, "%s", info["data_activity"].get<std::string>().c_str());
+        attroff(COLOR_PAIR(3));
+    } catch (json::parse_error& e) {
+        attron(COLOR_PAIR(4));
+        mvprintw(box_start_y + 3, box_start_x + 2, "Error parsing JSON: %s", e.what());
+        attroff(COLOR_PAIR(4));
+    }
 
     mvprintw(rows - 1, 0, "Press 'q' to quit");
 
