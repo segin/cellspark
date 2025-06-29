@@ -58,7 +58,7 @@ This document outlines the plan for creating a C++ ncurses-based application to 
 10. **Configuration Options:**
     *   Allow users to configure refresh interval via command-line argument. (Done)
     *   Allow users to configure display colors via command-line arguments or a configuration file.
-    *   Implement a configuration file (e.g., `~/.config/cinfo.conf`) for persistent settings.
+    *   Implement a configuration file (e.g., `~/.config/cellspark.conf`) for persistent settings.
 11. **More Telephony Information:**
     *   Integrate other `termux-telephony-*` commands (e.g., `termux-telephony-callinfo`, `termux-telephony-cellinfo`, `termux-telephony-siminfo`).
     *   Display signal strength (RSSI, RSRP, RSRQ, SINR) if available.

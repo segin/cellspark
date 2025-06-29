@@ -5,7 +5,7 @@ LDFLAGS := -lncurses
 BUILD_DIR := ./build
 SRC_DIR := ./src
 
-TARGET := cinfo
+TARGET := cellspark
 
 SRCS := $(wildcard $(SRC_DIR)/*.cpp)
 OBJS := $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SRCS))
