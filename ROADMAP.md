@@ -47,3 +47,73 @@ This document outlines the plan for creating a C++ ncurses-based application to 
     *   Test the non-interactive JSON output mode.
 8.  **Git Commits:**
     *   Commit changes to the Git repository at each significant step.
+
+## Future Enhancements
+
+9.  **Error Handling and Robustness:**
+    *   Implement more comprehensive error handling for `termux-telephony-deviceinfo` command execution (e.g., command not found, permission issues).
+    *   Gracefully handle malformed JSON output from `termux-telephony-deviceinfo`.
+    *   Add logging capabilities for debugging and error reporting.
+    *   Implement signal handling (e.g., SIGINT) for clean application shutdown.
+10. **Configuration Options:**
+    *   Allow users to configure refresh interval via command-line argument.
+    *   Allow users to configure display colors via command-line arguments or a configuration file.
+    *   Implement a configuration file (e.g., `~/.config/cinfo.conf`) for persistent settings.
+11. **More Telephony Information:**
+    *   Integrate other `termux-telephony-*` commands (e.g., `termux-telephony-callinfo`, `termux-telephony-cellinfo`, `termux-telephony-siminfo`).
+    *   Display signal strength (RSSI, RSRP, RSRQ, SINR) if available.
+    *   Show current cell ID and location area code.
+    *   Display detailed SIM card information (ICCID, IMSI).
+    *   Show call state (idle, ringing, off-hook).
+12. **User Interface Improvements (Advanced):**
+    *   Implement a multi-panel layout using ncurses windows for different information categories.
+    *   Add a status bar at the bottom for messages or current time.
+    *   Implement interactive elements (e.g., scrollable lists if data becomes extensive).
+    *   Support different themes/color schemes.
+    *   Add a splash screen on startup.
+    *   Implement a help screen accessible via a key press.
+    *   Add a "last updated" timestamp on the display.
+    *   Animate loading indicators while fetching data.
+13. **Cross-Platform Compatibility (Conceptual):**
+    *   Investigate possibilities for running on other Linux-like environments (requires alternative to `termux-api`).
+14. **Performance Optimizations:**
+    *   Optimize JSON parsing for large data sets (if applicable in future).
+    *   Minimize system calls for data fetching.
+15. **Testing and CI/CD:**
+    *   Write unit tests for `TermuxApi` and `Display` classes.
+    *   Set up a continuous integration (CI) pipeline (e.g., GitHub Actions) for automated builds and tests.
+    *   Implement integration tests for command-line arguments.
+16. **Packaging and Distribution:**
+    *   Create a Termux package for easy installation.
+    *   Provide clear installation instructions in `README.md`.
+17. **Code Quality and Maintainability:**
+    *   Refactor code for better modularity and readability.
+    *   Add Doxygen comments for API documentation.
+    *   Enforce coding style guidelines (e.g., using `clang-format`).
+    *   Migrate to CMake for build system (more flexible than Makefile for larger projects).
+18. **Accessibility:**
+    *   Consider options for screen reader compatibility (if ncurses allows).
+19. **Security:**
+    *   Review `popen` usage for potential security vulnerabilities (e.g., command injection, though less critical for internal tools).
+20. **Internationalization (i18n):**
+    *   Support multiple languages for UI text.
+21. **Battery Usage Optimization:**
+    *   Investigate ways to reduce battery consumption, especially in refresh mode.
+22. **Background Service (Conceptual):
+    *   Explore creating a background service for data collection (more complex, Android-specific).
+23. **Notifications:**
+    *   Integrate with Termux notifications for critical alerts (e.g., network disconnected).
+24. **Historical Data:**
+    *   Store historical cellular data and display trends.
+25. **Network Speed Test Integration:**
+    *   Integrate a simple network speed test.
+26. **Bluetooth Information:**
+    *   Integrate `termux-bluetooth-deviceinfo` to show Bluetooth status.
+27. **Wi-Fi Information:**
+    *   Integrate `termux-wifi-connectioninfo` to show Wi-Fi status.
+28. **Device Information:**
+    *   Integrate `termux-battery-status` and `termux-telephony-deviceinfo` for more general device info.
+29. **Interactive Debugging:**
+    *   Add a debug mode with verbose output.
+30. **User Feedback Mechanism:**
+    *   Implement a way for users to submit feedback or bug reports from within the app.
