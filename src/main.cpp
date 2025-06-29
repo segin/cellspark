@@ -1,5 +1,6 @@
 #include "TermuxApi.h"
 #include "Display.h"
+#include "Exceptions.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -14,8 +15,16 @@ int main(int argc, char* argv[]) {
         std::string arg = argv[i];
         if (arg == "--json") {
             TermuxApi api;
-            std::string info = api.getTelephonyInfo();
-            std::cout << info;
+            try {
+                std::string info = api.getTelephonyInfo();
+                std::cout << info;
+            } catch (const TermuxApiException& e) {
+                std::cerr << "Error: " << e.what() << std::endl;
+                return 1;
+            } catch (const JsonParseException& e) {
+                std::cerr << "Error: " << e.what() << std::endl;
+                return 1;
+            }
             return 0;
         } else if (arg == "-r") {
             refresh_mode = true;
@@ -27,8 +36,14 @@ int main(int argc, char* argv[]) {
 
     if (refresh_mode) {
         while (true) {
-            std::string info = api.getTelephonyInfo();
-            display.update(info);
+            try {
+                std::string info = api.getTelephonyInfo();
+                display.update(info);
+            } catch (const TermuxApiException& e) {
+                display.updateError(e.what());
+            } catch (const JsonParseException& e) {
+                display.updateError(e.what());
+            }
 
             // Non-blocking getch
             timeout(1000); // 1 second timeout
@@ -39,8 +54,14 @@ int main(int argc, char* argv[]) {
             }
         }
     } else {
-        std::string info = api.getTelephonyInfo();
-        display.update(info);
+        try {
+            std::string info = api.getTelephonyInfo();
+            display.update(info);
+        } catch (const TermuxApiException& e) {
+            display.updateError(e.what());
+        } catch (const JsonParseException& e) {
+            display.updateError(e.what());
+        }
         // Wait for a key press before exiting in one-shot mode
         getch();
     }

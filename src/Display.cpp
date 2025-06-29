@@ -1,6 +1,7 @@
 #include "Display.h"
 #include <ncurses.h>
 #include <json.hpp>
+#include "Exceptions.h"
 
 using json = nlohmann::json;
 
@@ -67,12 +68,46 @@ void Display::update(const std::string& data) {
         mvprintw(box_start_y + 6, box_start_x + 18, "%s", info["data_activity"].get<std::string>().c_str());
         attroff(COLOR_PAIR(3));
     } catch (json::parse_error& e) {
-        attron(COLOR_PAIR(4));
-        mvprintw(box_start_y + 3, box_start_x + 2, "Error parsing JSON: %s", e.what());
-        attroff(COLOR_PAIR(4));
+        throw JsonParseException(e.what());
     }
 
     mvprintw(rows - 1, 0, "Press 'q' to quit");
 
     refresh();
 }
+
+void Display::updateError(const std::string& errorMessage) {
+    clear();
+
+    int rows, cols;
+    getmaxyx(stdscr, rows, cols);
+
+    // Calculate box dimensions and position
+    int box_width = 60;
+    int box_height = 10;
+    int box_start_y = (rows - box_height) / 2;
+    int box_start_x = (cols - box_width) / 2;
+
+    // Draw box
+    attron(COLOR_PAIR(1));
+    mvaddch(box_start_y, box_start_x, ACS_ULCORNER);
+    mvaddch(box_start_y, box_start_x + box_width, ACS_URCORNER);
+    mvaddch(box_start_y + box_height, box_start_x, ACS_LLCORNER);
+    mvaddch(box_start_y + box_height, box_start_x + box_width, ACS_LRCORNER);
+    mvhline(box_start_y, box_start_x + 1, ACS_HLINE, box_width - 1);
+    mvhline(box_start_y + box_height, box_start_x + 1, ACS_HLINE, box_width - 1);
+    mvvline(box_start_y + 1, box_start_x, ACS_VLINE, box_height - 1);
+    mvvline(box_start_y + 1, box_start_x + box_width, ACS_VLINE, box_height - 1);
+    attroff(COLOR_PAIR(1));
+
+    attron(COLOR_PAIR(4));
+    mvprintw(box_start_y + 1, box_start_x + (box_width - 11) / 2, "ERROR");
+    mvprintw(box_start_y + 3, box_start_x + 2, "An error occurred:");
+    mvprintw(box_start_y + 5, box_start_x + 2, "%s", errorMessage.c_str());
+    attroff(COLOR_PAIR(4));
+
+    mvprintw(rows - 1, 0, "Press 'q' to quit");
+
+    refresh();
+}
+

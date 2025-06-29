@@ -8,6 +8,7 @@ public:
     Display();
     ~Display();
     void update(const std::string& data);
+    void updateError(const std::string& errorMessage);
 };
 
 #endif // DISPLAY_H
