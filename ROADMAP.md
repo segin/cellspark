@@ -30,8 +30,15 @@ This document outlines the plan for creating a C++ ncurses-based application to 
         *   Create `main.cpp`.
         *   Instantiate the `TermuxApi` and `Display` classes.
         *   Implement the main loop to refresh the data and handle user input ('q' to quit).
+    *   **Add Non-interactive Mode:**
+        *   Modify `main.cpp` to handle a command-line flag (e.g., `--json`).
+        *   If the flag is present, the application will:
+            *   Fetch the telephony information.
+            *   Print the raw JSON to standard output.
+            *   Exit immediately without initializing the ncurses display.
 7.  **Build and Test:**
     *   Compile the project using the `Makefile`.
     *   Run the application and verify its functionality.
+    *   Test the non-interactive JSON output mode.
 8.  **Git Commits:**
     *   Commit changes to the Git repository at each significant step.
