@@ -8,27 +8,41 @@
 #include <ncurses.h>
 
 int main(int argc, char* argv[]) {
-    if (argc > 1 && std::string(argv[1]) == "--json") {
-        TermuxApi api;
-        std::string info = api.getTelephonyInfo();
-        std::cout << info;
-        return 0;
+    bool refresh_mode = false;
+
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i];
+        if (arg == "--json") {
+            TermuxApi api;
+            std::string info = api.getTelephonyInfo();
+            std::cout << info;
+            return 0;
+        } else if (arg == "-r") {
+            refresh_mode = true;
+        }
     }
 
     TermuxApi api;
     Display display;
 
-    while (true) {
+    if (refresh_mode) {
+        while (true) {
+            std::string info = api.getTelephonyInfo();
+            display.update(info);
+
+            // Non-blocking getch
+            timeout(1000); // 1 second timeout
+            int ch = getch();
+
+            if (ch == 'q') {
+                break;
+            }
+        }
+    } else {
         std::string info = api.getTelephonyInfo();
         display.update(info);
-
-        // Non-blocking getch
-        timeout(1000); // 1 second timeout
-        int ch = getch();
-
-        if (ch == 'q') {
-            break;
-        }
+        // Wait for a key press before exiting in one-shot mode
+        getch();
     }
 
     return 0;

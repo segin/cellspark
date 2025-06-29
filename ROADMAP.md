@@ -32,6 +32,9 @@ This document outlines the plan for creating a C++ ncurses-based application to 
         *   Create `main.cpp`.
         *   Instantiate the `TermuxApi` and `Display` classes.
         *   Implement the main loop to refresh the data and handle user input ('q' to quit).
+    *   **Add One-Shot and Refresh Modes:**
+        *   Modify `main.cpp` to display information once and exit by default.
+        *   Add a command-line flag (`-r`) to enable real-time refresh with 'q' to quit.
     *   **Add Non-interactive Mode:**
         *   Modify `main.cpp` to handle a command-line flag (e.g., `--json`).
         *   If the flag is present, the application will:
