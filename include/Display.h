@@ -5,7 +5,7 @@
 
 class Display {
 public:
-    Display();
+    Display(int titleColor, int labelColor, int valueColor, int errorColor);
     ~Display();
     void update(const std::string& data);
     void updateError(const std::string& errorMessage);

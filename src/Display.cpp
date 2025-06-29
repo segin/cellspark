@@ -5,17 +5,17 @@
 
 using json = nlohmann::json;
 
-Display::Display() {
+Display::Display(int titleColor, int labelColor, int valueColor, int errorColor) {
     initscr();
     cbreak();
     noecho();
     curs_set(0);
     start_color();
     if (has_colors()) {
-        init_pair(1, COLOR_CYAN, COLOR_BLACK); // Title
-        init_pair(2, COLOR_WHITE, COLOR_BLACK); // Labels
-        init_pair(3, COLOR_YELLOW, COLOR_BLACK); // Values
-        init_pair(4, COLOR_RED, COLOR_BLACK); // Error
+        init_pair(1, titleColor, COLOR_BLACK); // Title
+        init_pair(2, labelColor, COLOR_BLACK); // Labels
+        init_pair(3, valueColor, COLOR_BLACK); // Values
+        init_pair(4, errorColor, COLOR_BLACK); // Error
     }
 }
 
